@@ -31,9 +31,12 @@ class App extends Component {
         title: title
       })
       .then(response => {
-        {
-          this.refreshTask();
-        }
+        this.refreshTask();
+        this.setState({ title: "" });
+        //methode 2 : ajouter dans le state la nlle tache
+        // const newTasks = [...this.state.tasks];
+        // newTasks.push(response.data)
+        // this.setState({tasks:newTasks});
       });
   };
 
@@ -53,17 +56,18 @@ class App extends Component {
                           id: task._id
                         })
                         .then(response => {
-                          axios.get("http://localhost:3000/").then(response => {
-                            this.setState({ tasks: response.data });
-                            console.log(response.data);
-                          });
+                          this.refreshTask();
                         });
                     }}
                   >
                     X{" "}
                   </span>
                   <span
-                    //   className="update"
+                    style={{
+                      cursor: "pointer",
+                      textDecoration:
+                        task.isDone === true ? "line-through" : "none"
+                    }}
                     onClick={() => {
                       axios
                         .post("http://localhost:3000/update", {
@@ -71,6 +75,7 @@ class App extends Component {
                         })
                         .then(response => {
                           console.log(response.data);
+                          this.refreshTask();
                         });
                     }}
                   >
@@ -88,6 +93,7 @@ class App extends Component {
             placeholder="Titre"
             className="task-input"
             name="title"
+            required
             value={this.state.title}
             onChange={this.handleChange}
           />
@@ -100,10 +106,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3000/").then(response => {
-      this.setState({ tasks: response.data });
-      console.log(response.data);
-    });
+    // axios.get("http://localhost:3000/").then(response => {
+    //   this.setState({ tasks: response.data });
+    //   console.log(response.data);
+    // });
+    this.refreshTask();
   }
 }
 
